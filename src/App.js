@@ -13,7 +13,7 @@ function App() {
   
   return (
     <RestaurantProvider>
-    <div className='flex'>    
+    <div className='flex'>  
     <SearchSection/>  
     <SanFranciscoMap/>
     </div>

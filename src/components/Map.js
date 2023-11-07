@@ -82,7 +82,7 @@ const sanFranciscoBounds = new L.LatLngBounds(
   function SanFranciscoMap() {
     return (
       <div className='relative'>
-          <div className="absolute left-1/2 top-14 transform -translate-x-1/2 z-10">
+          <div className="absolute left-1/2 top-14 transform -translate-x-1/2 z-10 ">
           <SearchStatusComponent/>
         </div>
         <MapContainer {...mapOptions}  className = {'h-screen w-screen z-0'} maxBounds={sanFranciscoBounds} >
