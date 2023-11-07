@@ -14,7 +14,6 @@ function LocationMarker() {
     click(e) {
       const clickedLatLng = e.latlng;
       setClickedPosition(clickedLatLng);
-  
       // Adjust the duration and zoom level as needed
       map.flyTo(clickedLatLng, 14, {
         duration: 1 // Adjust the duration in seconds
@@ -25,13 +24,16 @@ function LocationMarker() {
   return (
     <>
       {clickedPosition && (
-        <Marker position={clickedPosition} >
+        <Marker position={clickedPosition} icon={greenIcon}>
           <Popup>Coordinates: {clickedPosition.lat}, {clickedPosition.lng}</Popup>
         </Marker>
       )}
     </>
   );
 }
+
+
+
 
 
 const sanFranciscoBounds = new L.LatLngBounds(
@@ -122,3 +124,13 @@ const sanFranciscoBounds = new L.LatLngBounds(
     iconAnchor : [22,94], // point of the icon which will correspond to marker's location
     popupAnchor : [-3, -76] // point from which the popup should open relative to the iconAnchor
   })
+
+
+  var greenIcon = new Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
