@@ -33,6 +33,7 @@ function SearchSection() {
 }
 
 
+
 const restaurants = [
     {
       id: 1,
@@ -62,6 +63,7 @@ const restaurants = [
         image: 'https://s3-media0.fl.yelpcdn.com/bphoto/Iy0bBuL4LZ9thDqevB_5bw/348s.jpg', // Replace with the actual image URL
       }
   ];
+
 
 
   function RestaurantList() {
