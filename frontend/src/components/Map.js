@@ -1,31 +1,108 @@
-import React from 'react';
+import React,{useEffect,useRef} from 'react';
 import { MapContainer, TileLayer,Marker,Popup } from 'react-leaflet';
 import L from 'leaflet';
 import "leaflet/dist/leaflet.css"
 import {Icon} from 'leaflet'
 import { useMapEvents } from 'react-leaflet';
 import SearchStatusComponent from './LocationStatus';
-import SearchSection from './Search';
+import { useRestaurant } from './WifiContext';
+
+
+
+
+
 
 function LocationMarker() {
-  const [clickedPosition, setClickedPosition] = React.useState(null);
+  const {selectedArea, setSelectedArea, searchResults, setSearchResults, isSearching, setIsSearching} = useRestaurant();
+  async function fetchClosestLocations(latitude, longitude) {
+    setIsSearching(true)
+    try {
+      const response = await fetch(`http://localhost:8080/closestLocations?latitude=${latitude}&longitude=${longitude}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      setIsSearching(false)
+      setSearchResults(data)
+      return data;
+    } catch (error) {
+      console.error('Error fetching closest locations:', error.message);
+      setIsSearching(false)
+      setSearchResults([])
+      throw error;
+    }
+  }
+
+
+  const MIN_LATITUDE = 37.663132;
+  const MAX_LATITUDE = 37.845245;
+  const MIN_LONGITUDE = -122.558459;
+  const MAX_LONGITUDE = -122.360466;
+  const DEFAULT_LATITUDE = (MIN_LATITUDE + MAX_LATITUDE) / 2;
+  const DEFAULT_LONGITUDE = (MIN_LONGITUDE + MAX_LONGITUDE) / 2;
+  function getCurrent() {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+  
+        // Check if the current location is out of bounds
+        const isOutOfBounds = !(
+          latitude >= MIN_LATITUDE && latitude <= MAX_LATITUDE &&
+          longitude >= MIN_LONGITUDE && longitude <= MAX_LONGITUDE
+        );
+        if (isOutOfBounds) {
+          // If out of bounds, set the location to the middle of San Francisco
+          const sanFranciscoLocation = { lat: DEFAULT_LATITUDE, lng: DEFAULT_LONGITUDE };
+          setSelectedArea(sanFranciscoLocation);
+          flyToLocation(sanFranciscoLocation)
+          console.warn('Current location is out of bounds. Setting to the middle of San Francisco.');
+        } else {
+          // If within bounds, set the location to the user's current location
+          const userLocation = { lat: latitude, lng: longitude };
+          setSelectedArea(userLocation);
+          flyToLocation(userLocation)
+        }
+      },  
+      (error) => {
+        if (error.code === error.PERMISSION_DENIED) {
+          console.warn('User refused to allow location access. Defaulting to the middle of San Francisco.');
+          // Default to the middle of San Francisco if the user refuses access
+          const sanFranciscoLocation = { lat: DEFAULT_LATITUDE, lng: DEFAULT_LONGITUDE };
+          setSelectedArea(sanFranciscoLocation);
+          flyToLocation(sanFranciscoLocation)
+
+        } else {
+          console.error('Error getting user location:', error.message);
+        }
+      },
+    );
+  }
+  useEffect(() => {
+    // Ask for permission to access the user's location'
+    setSelectedArea({ lat: 37.7749, lng: -122.4194 })
+    getCurrent();
+  }, []);
 
   const map = useMapEvents({
     click(e) {
       const clickedLatLng = e.latlng;
-      setClickedPosition(clickedLatLng);
+      setSelectedArea(clickedLatLng);
+      flyToLocation(clickedLatLng)
       // Adjust the duration and zoom level as needed
-      map.flyTo(clickedLatLng, 14, {
-        duration: 1 // Adjust the duration in seconds
-      });
     },
   });
 
+  const flyToLocation = (location) => {
+    map.flyTo(location, 14, {
+      duration: 1 // Adjust the duration in seconds
+    });
+  };
+
   return (
     <>
-      {clickedPosition && (
-        <Marker position={clickedPosition} icon={greenIcon}>
-          <Popup>Coordinates: {clickedPosition.lat}, {clickedPosition.lng}</Popup>
+      {selectedArea && (
+        <Marker position={selectedArea} icon={greenIcon}>
+          <Popup>Coordinates: {selectedArea.lat}, {selectedArea.lng}</Popup>
         </Marker>
       )}
     </>
@@ -34,25 +111,30 @@ function LocationMarker() {
 
 
 
+const closestMarkers = () => {
+  const {searchResults} = useRestaurant()
+  return (
+    <>
+      {searchResults.map((result) => (
+        <Marker
+          key={result.id} // Ensure each marker has a unique key
+          position={[result.lat, result.lng]} // Use the latitude and longitude from your search result
+        >
+          <Popup>{result.name}</Popup>
+        </Marker>
+      ))}
+    </>
+  )
 
+}
 
 const sanFranciscoBounds = new L.LatLngBounds(
-    new L.LatLng(37.700421, -122.569245), // Southwest corner
-    new L.LatLng(37.834375, -122.349586)  // Northeast corner
+    new L.LatLng(37.663132,-122.558459), // Southwest corner
+    new L.LatLng(37.845245,-122.360466)  // Northeast corner
   );
-
-
-  const exampleLocations = [
-    { name: 'Golden Gate Bridge', coordinates: [37.8199, -122.4783] },
-    { name: "Fisherman's Wharf", coordinates: [37.8083, -122.4150] },
-    { name: 'Union Square', coordinates: [37.7881, -122.4076] },
-    { name: 'Alcatraz Island', coordinates: [37.8267, -122.4233] },
-    { name: 'Chinatown', coordinates: [37.7941, -122.4078] },
-  ];
-
-
-
   const initialCoordinates = [37.7749, -122.4194];
+
+
   const mapOptions = {
     center: initialCoordinates,
     zoom: 14,
@@ -61,27 +143,15 @@ const sanFranciscoBounds = new L.LatLngBounds(
     minZoom : 14
   };
 
-  const customIcon = new L.Icon({
-    iconUrl: '/test.png',
-    iconSize: [35, 35],
-    iconAnchor: [22, 94],
-    popupAnchor: [-3, -76],
-  });
 
   // Sample locations with proximity values
-  const locations = [
-    { position: [37.8199, -122.4783], proximity: 100 },
-    { position: [37.8083, -122.4150], proximity: 200 },
-    { position: [37.7881, -122.4076], proximity: 300 },
-    // Add more locations with proximity values
-  ];
-
-
-
-
 
   
   function SanFranciscoMap() {
+
+
+
+
     return (
       <div className='relative'>
           <div className="absolute left-1/2 top-14 transform -translate-x-1/2 z-10 ">
@@ -103,19 +173,8 @@ const sanFranciscoBounds = new L.LatLngBounds(
   
 
   // helper section 
-  const calculateDistance = (coord1, coord2) => {
-    const radianFactor = Math.PI / 180;
-    const earthRadius = 6371000; // Radius of the Earth in meters
-    const lat1 = coord1[0] * radianFactor;
-    const lat2 = coord2[0] * radianFactor;
-    const diffLat = (coord2[0] - coord1[0]) * radianFactor;
-    const diffLon = (coord2[1] - coord1[1]) * radianFactor;
-    const a = Math.sin(diffLat / 2) * Math.sin(diffLat / 2) + Math.cos(lat1) * Math.cos(lat2) * Math.sin(diffLon / 2) * Math.sin(diffLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return earthRadius * c;
-  };
 
- 
+
 
 
   const legalIcon = new Icon ({

@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
+import { useRestaurant } from './WifiContext';
+
+
+
+
 
 function SearchSection() {
   const [showSearchSection, setShowSearchSection] = useState(false);
-
   const toggleSearchSection = () => {
     setShowSearchSection(!showSearchSection);
   };
-
   return (
     <div>
       <div
@@ -31,6 +34,7 @@ function SearchSection() {
     </div>
   );
 }
+
 
 
 
