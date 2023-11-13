@@ -11,8 +11,8 @@ function SearchSection() {
   };
 
   return (
-    <div>
-      <div
+    <div className=''>
+      <div //mobile
         onClick={toggleSearchSection}
         className={`fixed bottom-0 left-0 right-0 bg-white p-4 sm:hidden h-auto z-10 transition-transform transform${
           showSearchSection ? ' translate-y-0' : ' translate-y-3/4'
@@ -27,27 +27,39 @@ function SearchSection() {
           Close
         </button>
         <div className=" overflow-y-auto h-[500px]">
-          <h1 className="font-bold text-center text-xl">Search Results</h1>
+          <h1 className="font-bold text-center text-xl">Query Results</h1>
+          <RestaurantList />
+        </div>
+      </div>
+      <div>
+        <div className=" overflow-y-auto h-screen w-96 p-4 bg-gray-100">
+          <h1 className="font-bold text-center text-xl">Query Results</h1>
           <RestaurantList />
         </div>
       </div>
     </div>
   );
 }
-
   function RestaurantList() {
     const { searchResults, setSearchResults,current,setCurrent} = useRestaurant();
     return (
-      <div className=''>
-        {searchResults.map((restaurant) => (
-          <div key={restaurant.id} className='flex p-3 rounded-lg border my-2'>
-            <img src={restaurant.image} className='h-20' style={{ width: '50%', height: 'auto', maxHeight: '100%' }}></img>
-            <div className='ml-2 '>
-              <div className='flex font-bold'>  <h2 className=''> {restaurant.id}. {restaurant.name}</h2></div>
-            </div>  
-          </div>
-        ))}
+<div className=''>
+  {searchResults.map((restaurant, index) => (
+    <div key={index} className='flex p-3 rounded-lg border my-2 h-32 bg-white'>
+      <img src={restaurant.image} style={{ width: '50%', height: 'auto', maxHeight: '100%' }} alt={`Restaurant ${index}`} />
+      <div className='ml-2'>
+        <div className='flex font-bold'>
+          <h2>{index + 1}. {restaurant.name}</h2>
+        </div>
+        <div className='flex text-gray-400'>
+          {restaurant.address} , San Francisco, CA
+        </div>
+
       </div>
+    </div>
+  ))}
+</div>
+
     );
   }
 

@@ -139,6 +139,7 @@ const ClosestMarkers = () => {
             <img src={result.image} className='h-20 w-1/2'></img>
             <div className='ml-2 '>
               <div className='flex font-bold'>  <h2 className=''>  {result.name}</h2></div>
+              <div className='flex mt-2 items-center'><svg xmlns="http://www.w3.org/2000/svg" className = {'w-4 h-4'} width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg><p className='pl-3'>{result.type.charAt(0).toUpperCase() + result.type.slice(1)}</p></div>
             </div>  
           </div>
             </Popup>
@@ -167,12 +168,14 @@ const sanFranciscoBounds = new L.LatLngBounds(
 
   // Sample locations with proximity values
   function SanFranciscoMap() {
+
+
     return (
-      <div className='relative'>
+      <div className='flex-grow relative'>
           <div className="absolute left-1/2 top-14 transform -translate-x-1/2 z-10 ">
           <SearchStatusComponent/>
         </div>
-        <MapContainer {...mapOptions}  className = {'h-screen w-screen z-0'} maxBounds={sanFranciscoBounds} >
+        <MapContainer {...mapOptions}  className = {'h-screen w-full z-0'} maxBounds={sanFranciscoBounds} >
       <TileLayer
         attribution='&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
@@ -186,6 +189,11 @@ const sanFranciscoBounds = new L.LatLngBounds(
   
   export default SanFranciscoMap;
   
+
+
+
+
+
 
   // helper section 
 
