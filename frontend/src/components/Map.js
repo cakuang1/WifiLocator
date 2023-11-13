@@ -6,14 +6,12 @@ import {Icon} from 'leaflet'
 import { useMapEvents } from 'react-leaflet';
 import SearchStatusComponent from './LocationStatus';
 import { useRestaurant } from './WifiContext';
-
-
-
-
+import ReactDOMServer from 'react-dom/server'; // Import ReactDOMServer
 
 
 function LocationMarker() {
   const {selectedArea, setSelectedArea, searchResults, setSearchResults, isSearching, setIsSearching} = useRestaurant();
+
   async function fetchClosestLocations(latitude, longitude) {
     setIsSearching(true)
     try {
@@ -32,8 +30,6 @@ function LocationMarker() {
       throw error;
     }
   }
-
-
   const MIN_LATITUDE = 37.663132;
   const MAX_LATITUDE = 37.845245;
   const MIN_LONGITUDE = -122.558459;
@@ -53,12 +49,14 @@ function LocationMarker() {
         if (isOutOfBounds) {
           // If out of bounds, set the location to the middle of San Francisco
           const sanFranciscoLocation = { lat: DEFAULT_LATITUDE, lng: DEFAULT_LONGITUDE };
+          fetchClosestLocations(sanFranciscoLocation.lat,sanFranciscoLocation.lng)
           setSelectedArea(sanFranciscoLocation);
           flyToLocation(sanFranciscoLocation)
           console.warn('Current location is out of bounds. Setting to the middle of San Francisco.');
         } else {
           // If within bounds, set the location to the user's current location
           const userLocation = { lat: latitude, lng: longitude };
+          fetchClosestLocations(userLocation.lat,userLocation.lng)
           setSelectedArea(userLocation);
           flyToLocation(userLocation)
         }
@@ -68,15 +66,19 @@ function LocationMarker() {
           console.warn('User refused to allow location access. Defaulting to the middle of San Francisco.');
           // Default to the middle of San Francisco if the user refuses access
           const sanFranciscoLocation = { lat: DEFAULT_LATITUDE, lng: DEFAULT_LONGITUDE };
+          fetchClosestLocations(sanFranciscoBounds.lat,sanFranciscoBounds.lng)
           setSelectedArea(sanFranciscoLocation);
           flyToLocation(sanFranciscoLocation)
-
         } else {
           console.error('Error getting user location:', error.message);
         }
       },
     );
   }
+
+
+
+
   useEffect(() => {
     // Ask for permission to access the user's location'
     setSelectedArea({ lat: 37.7749, lng: -122.4194 })
@@ -86,6 +88,7 @@ function LocationMarker() {
   const map = useMapEvents({
     click(e) {
       const clickedLatLng = e.latlng;
+      fetchClosestLocations(clickedLatLng.lat,clickedLatLng.lng)
       setSelectedArea(clickedLatLng);
       flyToLocation(clickedLatLng)
       // Adjust the duration and zoom level as needed
@@ -97,10 +100,9 @@ function LocationMarker() {
       duration: 1 // Adjust the duration in seconds
     });
   };
-
   return (
     <>
-      {selectedArea && (
+      {selectedArea && selectedArea.lat && selectedArea.lng && (
         <Marker position={selectedArea} icon={greenIcon}>
           <Popup>Coordinates: {selectedArea.lat}, {selectedArea.lng}</Popup>
         </Marker>
@@ -111,29 +113,49 @@ function LocationMarker() {
 
 
 
-const closestMarkers = () => {
+const ClosestMarkers = () => {
   const {searchResults} = useRestaurant()
+  const CustomMarker = ({ number }) => {
+    return ( 
+    <div className="rounded-full bg-gray-400 text-white p-2 rounded-full shadow-md w-8 h-8 flex items-center justify-center">
+      <span className="text-xl font-bold">{number}</span>
+    </div>
+    )
+  ;
+  }
   return (
     <>
-      {searchResults.map((result) => (
-        <Marker
-          key={result.id} // Ensure each marker has a unique key
-          position={[result.lat, result.lng]} // Use the latitude and longitude from your search result
-        >
-          <Popup>{result.name}</Popup>
-        </Marker>
-      ))}
+      {searchResults.map((result, index) => {
+        const geo = JSON.parse(result.geo);
+        const position = [geo.coordinates[1], geo.coordinates[0]]; // Extracting latitude and longitude
+        const customIcon = new L.divIcon({
+          className: '',
+          html: ReactDOMServer.renderToString(<CustomMarker number={index + 1} />),
+        });
+        return (
+          <Marker key={result.id} position={position} icon={customIcon}>
+            <Popup className=''>
+            <div key={result.id} className='flex  rounded-lg w-[250px]'>
+            <img src={result.image} className='h-20 w-1/2'></img>
+            <div className='ml-2 '>
+              <div className='flex font-bold'>  <h2 className=''>  {result.name}</h2></div>
+            </div>  
+          </div>
+            </Popup>
+          </Marker>
+        );
+      })}
     </>
   )
-
 }
+
+
 
 const sanFranciscoBounds = new L.LatLngBounds(
     new L.LatLng(37.663132,-122.558459), // Southwest corner
     new L.LatLng(37.845245,-122.360466)  // Northeast corner
   );
   const initialCoordinates = [37.7749, -122.4194];
-
 
   const mapOptions = {
     center: initialCoordinates,
@@ -143,15 +165,8 @@ const sanFranciscoBounds = new L.LatLngBounds(
     minZoom : 14
   };
 
-
   // Sample locations with proximity values
-
-  
   function SanFranciscoMap() {
-
-
-
-
     return (
       <div className='relative'>
           <div className="absolute left-1/2 top-14 transform -translate-x-1/2 z-10 ">
@@ -163,9 +178,9 @@ const sanFranciscoBounds = new L.LatLngBounds(
         url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
       />
       <LocationMarker />
+      <ClosestMarkers/>
     </MapContainer>
     </div>
-
     );
   }
   
@@ -174,15 +189,6 @@ const sanFranciscoBounds = new L.LatLngBounds(
 
   // helper section 
 
-
-
-
-  const legalIcon = new Icon ({
-    iconUrl : '/test.png',
-    iconSize : [35,35], // size of the icon
-    iconAnchor : [22,94], // point of the icon which will correspond to marker's location
-    popupAnchor : [-3, -76] // point from which the popup should open relative to the iconAnchor
-  })
 
 
   var greenIcon = new Icon({

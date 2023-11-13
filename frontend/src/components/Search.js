@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useRestaurant } from './WifiContext';
-
-
-
+// when the user clicks on either side bar or on the marker the current should be set to the item. How to handle the fly to case. If the user fl
 
 
 function SearchSection() {
-  const [showSearchSection, setShowSearchSection] = useState(false);
+  const { searchResults, setSearchResults,current,setCurrent} = useRestaurant();
+  const [showSearchSection,setShowSearchSection] = useState(false);
   const toggleSearchSection = () => {
     setShowSearchSection(!showSearchSection);
   };
+
   return (
     <div>
       <div
@@ -35,47 +35,13 @@ function SearchSection() {
   );
 }
 
-
-
-
-const restaurants = [
-    {
-      id: 1,
-      name: 'Restaurant A',
-      image: 'https://s3-media0.fl.yelpcdn.com/bphoto/Iy0bBuL4LZ9thDqevB_5bw/348s.jpg', // Replace with the actual image URL
-    },
-    {
-        id: 1,
-        name: 'Restaurant A',
-        image: 'https://s3-media0.fl.yelpcdn.com/bphoto/Iy0bBuL4LZ9thDqevB_5bw/348s.jpg', // Replace with the actual image URL
-      },
-      {
-        id: 1,
-        name: 'Restaurant A',
-        image: 'https://s3-media0.fl.yelpcdn.com/bphoto/Iy0bBuL4LZ9thDqevB_5bw/348s.jpg', // Replace with the actual image URL
-      },  {
-        id: 1,
-        name: 'Restaurant A',
-        image: 'https://s3-media0.fl.yelpcdn.com/bphoto/Iy0bBuL4LZ9thDqevB_5bw/348s.jpg', // Replace with the actual image URL
-      },{
-        id: 1,
-        name: 'Restaurant A',
-        image: 'https://s3-media0.fl.yelpcdn.com/bphoto/Iy0bBuL4LZ9thDqevB_5bw/348s.jpg', // Replace with the actual image URL
-      },{
-        id: 1,
-        name: 'Restaurant A',
-        image: 'https://s3-media0.fl.yelpcdn.com/bphoto/Iy0bBuL4LZ9thDqevB_5bw/348s.jpg', // Replace with the actual image URL
-      }
-  ];
-
-
-
   function RestaurantList() {
+    const { searchResults, setSearchResults,current,setCurrent} = useRestaurant();
     return (
       <div className=''>
-        {restaurants.map((restaurant) => (
+        {searchResults.map((restaurant) => (
           <div key={restaurant.id} className='flex p-3 rounded-lg border my-2'>
-            <img src={restaurant.image} className='h-20'></img>
+            <img src={restaurant.image} className='h-20' style={{ width: '50%', height: 'auto', maxHeight: '100%' }}></img>
             <div className='ml-2 '>
               <div className='flex font-bold'>  <h2 className=''> {restaurant.id}. {restaurant.name}</h2></div>
             </div>  

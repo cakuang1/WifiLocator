@@ -7,14 +7,14 @@ export function RestaurantProvider({ children }) {
     const [selectedArea, setSelectedArea] = useState(null);
     const [searchResults, setSearchResults] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
-
-    
+    const [current,setCurrent] = useState(null);
   return (
-    <RestaurantContext.Provider value={{ selectedArea, setSelectedArea, searchResults, setSearchResults, isSearching, setIsSearching }}>
+    <RestaurantContext.Provider value={{ selectedArea, setSelectedArea, searchResults, setSearchResults, isSearching, setIsSearching,current,setCurrent}}>
       {children}
     </RestaurantContext.Provider>
   );
 }
+
 
 export function useRestaurant() {
   return useContext(RestaurantContext);
