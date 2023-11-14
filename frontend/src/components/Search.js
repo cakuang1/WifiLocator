@@ -31,31 +31,33 @@ function SearchSection() {
           <RestaurantList />
         </div>
       </div>
-      <div>
+      <div className='w-0'>
         <div className=" overflow-y-auto h-screen w-96 p-4 bg-gray-100">
           <h1 className="font-bold text-center text-xl">Query Results</h1>
-          <RestaurantList />
+          <RestaurantList />  
         </div>
       </div>
     </div>
   );
 }
+
+
   function RestaurantList() {
     const { searchResults, setSearchResults,current,setCurrent} = useRestaurant();
     return (
 <div className=''>
   {searchResults.map((restaurant, index) => (
-    <div key={index} className='flex p-3 rounded-lg border my-2 h-32 bg-white'>
+    <div key={index} className='flex p-3 rounded-lg border my-2 h-32 bg-white hover:bg-gray-200 '>
       <img src={restaurant.image} style={{ width: '50%', height: 'auto', maxHeight: '100%' }} alt={`Restaurant ${index}`} />
       <div className='ml-2'>
-        <div className='flex font-bold'>
+        <div className='flex font-bold text-md'>
           <h2>{index + 1}. {restaurant.name}</h2>
         </div>
-        <div className='flex text-gray-400'>
+        <div className='flex text-gray-400 text-sm'>
           {restaurant.address} , San Francisco, CA
         </div>
-
       </div>
+      <div className=''> </div>
     </div>
   ))}
 </div>

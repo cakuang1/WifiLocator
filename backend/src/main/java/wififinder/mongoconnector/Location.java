@@ -1,5 +1,7 @@
 package wififinder.mongoconnector;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,6 +16,36 @@ public class Location {
     private String reviews;
     private String image;
     private String type;
+    private String hours;
+    private List<BusinessHours> hoursList;
+    private String yelp;
+
+    public List<BusinessHours> getHoursList() {
+        return hoursList;
+    }
+
+    public void setHoursList(List<BusinessHours> hoursList) {
+        this.hoursList = hoursList;
+    }
+
+    // Getter for 'yelp'
+    public String getYelp() {
+        return yelp;
+    }
+
+    // Setter for 'yelp'
+    public void setYelp(String yelp) {
+        this.yelp = yelp;
+    }
+
+    public String getHours() {
+        return hours;
+    }
+
+    // Setter for 'yelp'
+    public void setHours(String hours) {
+        this.hours = hours;
+    }
 
     public String getId() {
         return id;
