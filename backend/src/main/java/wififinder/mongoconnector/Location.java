@@ -18,7 +18,7 @@ public class Location {
     private String type;
     private String hours;
     private List<BusinessHours> hoursList;
-    private String yelp;
+    private String google;
 
     public List<BusinessHours> getHoursList() {
         return hoursList;
@@ -29,13 +29,13 @@ public class Location {
     }
 
     // Getter for 'yelp'
-    public String getYelp() {
-        return yelp;
+    public String getGoogle() {
+        return google;
     }
 
     // Setter for 'yelp'
-    public void setYelp(String yelp) {
-        this.yelp = yelp;
+    public void setGoogle(String google) {
+        this.google = google;
     }
 
     public String getHours() {

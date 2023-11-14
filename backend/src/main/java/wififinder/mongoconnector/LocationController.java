@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.List;
 
 
-
 @RestController
 public class LocationController {
     @Autowired
@@ -27,13 +26,12 @@ public class LocationController {
     ) {
         // Retrieve closest locations directly from the service
         List<Location> closestLocations = locationService.findClosestLocations(longitude, latitude);
-
         // ObjectMapper for JSON parsing
         ObjectMapper objectMapper = new ObjectMapper();
-
         // Parse the 'hours' string into a list for each location
         for (Location location : closestLocations) {
             try {
+                
                 List<BusinessHours> hoursList = objectMapper.readValue(location.getHours(), new TypeReference<List<BusinessHours>>() {});
                 location.setHoursList(hoursList);
             } catch (IOException e) {
@@ -42,7 +40,6 @@ public class LocationController {
                 return ResponseEntity.badRequest().build();
             }
         }
-
         // Now 'closestLocations' is a List<Location> with 'hoursList' populated
         return ResponseEntity.ok(closestLocations);
     }
