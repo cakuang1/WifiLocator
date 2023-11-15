@@ -7,7 +7,7 @@ import { useMapEvents } from 'react-leaflet';
 import SearchStatusComponent from './LocationStatus';
 import { useRestaurant } from './WifiContext';
 import ReactDOMServer from 'react-dom/server'; // Import ReactDOMServer
-
+import { isStoreOpen } from './Search';
 
 function LocationMarker() {
   const {selectedArea, setSelectedArea, searchResults, setSearchResults, isSearching, setIsSearching} = useRestaurant();
@@ -112,7 +112,6 @@ function LocationMarker() {
 }
 
 
-
 const ClosestMarkers = () => {
   const {searchResults} = useRestaurant()
   const CustomMarker = ({ number }) => {
@@ -132,15 +131,25 @@ const ClosestMarkers = () => {
           className: '',
           html: ReactDOMServer.renderToString(<CustomMarker number={index + 1} />),
         });
+        const dic = isStoreOpen(result.hoursList)
+        const isOpen = dic.isOpen
+        const sched = dic.sched
+        const day = dic.day
         return (
           <Marker key={result.id} position={position} icon={customIcon}>
             <Popup className=''>
-            <div key={result.id} className='flex  rounded-lg w-[250px]'>
-            <img src={result.image} className='h-20 w-1/2'></img>
+            <div key={result.id} className='flex rounded-lg w-[250px]'>
+            <img src={result.image} className='h-28 border w-1/2'></img>
             <div className='ml-2 '>
-              <div className='flex font-bold'>  <h2 className=''>  {result.name}</h2></div>
-              <div className='flex mt-2 items-center'><svg xmlns="http://www.w3.org/2000/svg" className = {'w-4 h-4'} width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg><p className='pl-3'>{result.type.charAt(0).toUpperCase() + result.type.slice(1)}</p></div>
-            </div>  
+            <div className='font-bold'> <h2 className=''>  {result.name}</h2></div>
+              <div className='flex items-center'><svg xmlns="http://www.w3.org/2000/svg" className = {'w-6 h-6'}  viewBox="0 0 24 24"><path fill="currentColor" d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg><div className='flex items-center'>{result.type.charAt(0).toUpperCase() + result.type.slice(1)}</div></div>
+              <div className='font-bold'>{sched.day} </div>
+              <div>{sched.open} - {sched.close}</div>
+              <div className='flex items-center'>
+              <svg xmlns="http://www.w3.org/2000/svg" className = {'w-6 h-6'} width="24" height="24"  viewBox="0 0 24 24"><path fill="currentColor" d="M4.462 20v-1H6V5.115q0-.666.475-1.14q.474-.475 1.14-.475h8.77q.666 0 1.14.475q.475.474.475 1.14V19h1.538v1H4.462ZM15 19h2V5.115q0-.269-.173-.442t-.442-.173h-3.539v-.485q.927.104 1.54.797q.614.692.614 1.615V19Zm-4-6.23q.31 0 .54-.23q.23-.23.23-.54q0-.31-.23-.54q-.23-.23-.54-.23q-.31 0-.54.23q-.23.23-.23.54q0 .31.23.54q.23.23.54.23Z"/></svg>
+                {isOpen ? <div className='text-green-500 font-semibold pl-3'>Open</div> : <div className='text-red-500 font-semibold pl-3'> Closed</div>}
+              </div>
+            </div> 
           </div>
             </Popup>
           </Marker>
