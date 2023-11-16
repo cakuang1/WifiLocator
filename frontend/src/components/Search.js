@@ -115,12 +115,21 @@ function CardSection({ restaurant, onClose }) {
     </div>
     <div className='status flex mt-2'>
       <div> <svg xmlns="http://www.w3.org/2000/svg" className = {'w-7 h-7'} width="24" height="24"  viewBox="0 0 24 24"><path fill="currentColor" d="M4.462 20v-1H6V5.115q0-.666.475-1.14q.474-.475 1.14-.475h8.77q.666 0 1.14.475q.475.474.475 1.14V19h1.538v1H4.462ZM15 19h2V5.115q0-.269-.173-.442t-.442-.173h-3.539v-.485q.927.104 1.54.797q.614.692.614 1.615V19Zm-4-6.23q.31 0 .54-.23q.23-.23.23-.54q0-.31-.23-.54q-.23-.23-.54-.23q-.31 0-.54.23q-.23.23-.23.54q0 .31.23.54q.23.23.54.23Z"/></svg></div>
-      {isOpen ? <div className='text-green-500 font-semibold pl-3 text-center flex-grow'>Open</div> : <div className='text-red-500 font-semibold pl-3 text-center flex-grow'> Closed</div>}
+      {isOpen ? <div className='text-green-500 font-semibold  text-center flex-grow'>Open</div> : <div className='text-red-500 font-semibold pl-3 text-center flex-grow'> Closed</div>}
+    </div>
+    <div className='status flex mt-2'>
+    <svg xmlns="http://www.w3.org/2000/svg" className = {'w-7 h-7'} width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m6.35 15.35l-2.1-2.15q1.55-1.55 3.55-2.375T12 10q2.2 0 4.213.838t3.537 2.412l-2.1 2.1q-1.125-1.125-2.588-1.738T12 13q-1.6 0-3.063.613T6.35 15.35ZM2.1 11.1L0 9q2.375-2.425 5.488-3.713T12 4q3.4 0 6.513 1.288T24 9l-2.1 2.1q-1.975-1.975-4.538-3.038T12 7Q9.2 7 6.637 8.063T2.1 11.1ZM12 21l-3.525-3.55q.7-.7 1.613-1.075T12 16q1 0 1.913.375t1.612 1.075L12 21Z"/></svg>      
+    <div className='flex-grow text-center font-bold'>Has Wifi</div>
     </div>
         </div>
-      <div className='directions'>
-          <div className=''></div>
+        <a ref={restaurant.google} >
+      <div className='directions flex items-center justify-center mt-5'>
+
+      <div className='bg-gray-600 p-2 flex text-white rounded-lg hover:bg-gray-700 hover:cursor-pointer' >
+      <svg xmlns="http://www.w3.org/2000/svg"  className = {"mr-2 "} width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M8 15h2v-3h3.5v2.5L17 11l-3.5-3.5V10H9q-.425 0-.713.288T8 11v4Zm4 7q-.375 0-.738-.15t-.662-.45l-8-8q-.3-.3-.45-.663T2 12q0-.375.15-.738t.45-.662l8-8q.3-.3.663-.45T12 2q.375 0 .738.15t.662.45l8 8q.3.3.45.663T22 12q0 .375-.15.738t-.45.662l-8 8q-.3.3-.663.45T12 22Zm-4-6l4 4l8-8l-8-8l-8 8l4 4Zm4-4Z"/></svg>
+        Directions</div>
       </div>
+      </a>
       </div>
     );
   }
