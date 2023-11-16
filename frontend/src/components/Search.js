@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { useRestaurant } from './WifiContext';
 // when the user clicks on either side bar or on the marker the current should be set to the item. How to handle the fly to case. If the user fl
-import moment from 'moment-timezone';
 
 
 function SearchSection() {
   const { searchResults} = useRestaurant();
   const [showSearchSection,setShowSearchSection] = useState(false);
-
 
   const toggleSearchSection = () => {
     setShowSearchSection(!showSearchSection);
@@ -51,24 +49,32 @@ function RestaurantList() {
 {selectedRestaurant ? <CardSection restaurant={selectedRestaurant} onClose={closeCardSection}/> : 
 <div>
 <h1 className="font-bold text-center text-xl">Query Results</h1>
-{searchResults.map((restaurant, index) => (
-  <div onClick={() => openCardSection(restaurant)}>
-  <div key={index} className='flex p-3 rounded-lg border my-2 h-32 bg-white hover:bg-gray-200 '>
-    <img src={restaurant.image} style={{ width: '50%', height: 'auto', maxHeight: '100%' }} alt={`Restaurant ${index}`} />
-    <div className='ml-2'>
-      <div className='flex font-bold text-md'>
-        <h2>{index + 1}. {restaurant.name}</h2>
-      </div>
-      <div className='flex text-gray-400 text-sm'>
-        {restaurant.address} , San Francisco, CA
-      </div>
-      <div className='flex text-gray-400 text-sm'>
-        {console.log(isStoreOpen(restaurant.hoursList).isOpen)  }
+{searchResults.map((restaurant, index) => {
+  const isOpen = isStoreOpen(restaurant.hoursList).isOpen;
+
+  return (
+    <div key={index} onClick={() => openCardSection(restaurant)} className='cursor-pointer'>
+      <div className='flex p-3 rounded-lg border my-2 h-32 bg-white hover:bg-gray-200'>
+        <img src={restaurant.image} style={{ width: '50%', height: 'auto', maxHeight: '100%' }} alt={`Restaurant ${index}`} />
+        <div className='ml-2'>
+          <div className='flex font-bold text-md'>
+            <h2>{index + 1}. {restaurant.name}</h2>
+          </div>
+          <div className='flex text-gray-400 text-sm'>
+            {restaurant.address}, San Francisco, CA
+          </div>
+          <div className='flex items-center'>
+            <svg xmlns="http://www.w3.org/2000/svg" className='w-6 h-6' width="24" height="24" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M4.462 20v-1H6V5.115q0-.666.475-1.14q.474-.475 1.14-.475h8.77q.666 0 1.14.475q.475.474.475 1.14V19h1.538v1H4.462ZM15 19h2V5.115q0-.269-.173-.442t-.442-.173h-3.539v-.485q.927.104 1.54.797q.614.692.614 1.615V19Zm-4-6.23q.31 0 .54-.23q.23-.23.23-.54q0-.31-.23-.54q-.23-.23-.54-.23q-.31 0-.54.23q-.23.23-.23.54q0 .31.23.54q.23.23.54.23Z" />
+            </svg>
+            {isOpen ? <div className='text-green-500 font-semibold pl-3'>Open</div> : <div className='text-red-500 font-semibold pl-3'> Closed</div>}
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  </div>
-))}
+  );
+})}
+
 </div>
 }
 </div>
@@ -78,19 +84,28 @@ function RestaurantList() {
 
 
 function CardSection({ restaurant, onClose }) {
+  const dic = isStoreOpen(restaurant.hoursList)
+  const isOpen = dic.isOpen
+  const sched = dic.sched
+  const day = dic.day
     // Your card section UI with restaurant details
     return (
       <div className='text-center px-4 mt-2   rounded-2xl'>
-        <button onClick={onClose} className=''><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m4 10l-.707.707L2.586 10l.707-.707L4 10Zm17 8a1 1 0 1 1-2 0h2ZM8.293 15.707l-5-5l1.414-1.414l5 5l-1.414 1.414Zm-5-6.414l5-5l1.414 1.414l-5 5l-1.414-1.414ZM4 9h10v2H4V9Zm17 7v2h-2v-2h2Zm-7-7a7 7 0 0 1 7 7h-2a5 5 0 0 0-5-5V9Z"/></svg></button>
+        <button onClick={onClose} className='border mb-4 rounded-full p-2 hover:bg-gray-200 hover:text-gray-800 transition-all duration-300 '><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m4 10l-.707.707L2.586 10l.707-.707L4 10Zm17 8a1 1 0 1 1-2 0h2ZM8.293 15.707l-5-5l1.414-1.414l5 5l-1.414 1.414Zm-5-6.414l5-5l1.414 1.414l-5 5l-1.414-1.414ZM4 9h10v2H4V9Zm17 7v2h-2v-2h2Zm-7-7a7 7 0 0 1 7 7h-2a5 5 0 0 0-5-5V9Z"/></svg></button>
         <div className='title text-2xl font-bold'> {restaurant.name}</div> 
         <div className='image '><img  className = {"mx-auto rounded"}src={restaurant.image}></img></div>
+        <div className='flex mt-4 items-center '>
+          <div><svg xmlns="http://www.w3.org/2000/svg" className = {"h-7 w-7"} width="512" height="512" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M256 48c-79.5 0-144 61.39-144 137c0 87 96 224.87 131.25 272.49a15.77 15.77 0 0 0 25.5 0C304 409.89 400 272.07 400 185c0-75.61-64.5-137-144-137Z"/><circle cx="256" cy="192" r="48" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg></div>
+          <div className='text-center mx-auto'>{restaurant.address}</div>
+        </div>
         <div className='hours mt-4'>
-        <div className="max-w-lg mx-auto bg-white p-8 rounded-2xl shadow-md">
-      <h1 className="text-2xl font-bold mb-4">Business Hours</h1>
-      <div className="grid grid-cols-2 gap-4">
+        <div className="flex">
+          <div><svg xmlns="http://www.w3.org/2000/svg"  className = {"h-7 w-7"} width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 14a1 1 0 1 0-1-1a1 1 0 0 0 1 1Zm5 0a1 1 0 1 0-1-1a1 1 0 0 0 1 1Zm-5 4a1 1 0 1 0-1-1a1 1 0 0 0 1 1Zm5 0a1 1 0 1 0-1-1a1 1 0 0 0 1 1ZM7 14a1 1 0 1 0-1-1a1 1 0 0 0 1 1ZM19 4h-1V3a1 1 0 0 0-2 0v1H8V3a1 1 0 0 0-2 0v1H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3Zm1 15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-9h16Zm0-11H4V7a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1ZM7 18a1 1 0 1 0-1-1a1 1 0 0 0 1 1Z"/></svg></div>
+      <div className=" mx-auto">
         {restaurant.hoursList.map((day, index) => (
-          <div key={index}>
-            <h2 className=" font-semibold mb-2">{day.day}</h2>
+          
+          <div key={index} className='flex'>
+            <h2 className=" font-semibold mb-2 mr-4 w-20">{day.day}  </h2>
             <p>
               {day.open} - {day.close}
             </p>
@@ -98,10 +113,13 @@ function CardSection({ restaurant, onClose }) {
         ))}
       </div>
     </div>
-    <div className='status'></div>
+    <div className='status flex mt-2'>
+      <div> <svg xmlns="http://www.w3.org/2000/svg" className = {'w-7 h-7'} width="24" height="24"  viewBox="0 0 24 24"><path fill="currentColor" d="M4.462 20v-1H6V5.115q0-.666.475-1.14q.474-.475 1.14-.475h8.77q.666 0 1.14.475q.475.474.475 1.14V19h1.538v1H4.462ZM15 19h2V5.115q0-.269-.173-.442t-.442-.173h-3.539v-.485q.927.104 1.54.797q.614.692.614 1.615V19Zm-4-6.23q.31 0 .54-.23q.23-.23.23-.54q0-.31-.23-.54q-.23-.23-.54-.23q-.31 0-.54.23q-.23.23-.23.54q0 .31.23.54q.23.23.54.23Z"/></svg></div>
+      {isOpen ? <div className='text-green-500 font-semibold pl-3 text-center flex-grow'>Open</div> : <div className='text-red-500 font-semibold pl-3 text-center flex-grow'> Closed</div>}
+    </div>
         </div>
       <div className='directions'>
-
+          <div className=''></div>
       </div>
       </div>
     );

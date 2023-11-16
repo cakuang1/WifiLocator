@@ -10,7 +10,7 @@ import ReactDOMServer from 'react-dom/server'; // Import ReactDOMServer
 import { isStoreOpen } from './Search';
 
 function LocationMarker() {
-  const {selectedArea, setSelectedArea, searchResults, setSearchResults, isSearching, setIsSearching} = useRestaurant();
+  const {selectedArea, setSelectedArea,  setSearchResults,  setIsSearching} = useRestaurant();
 
   async function fetchClosestLocations(latitude, longitude) {
     setIsSearching(true)
@@ -111,7 +111,6 @@ function LocationMarker() {
   );
 }
 
-
 const ClosestMarkers = () => {
   const {searchResults} = useRestaurant()
   const CustomMarker = ({ number }) => {
@@ -159,8 +158,6 @@ const ClosestMarkers = () => {
   )
 }
 
-
-
 const sanFranciscoBounds = new L.LatLngBounds(
     new L.LatLng(37.663132,-122.558459), // Southwest corner
     new L.LatLng(37.845245,-122.360466)  // Northeast corner
@@ -173,12 +170,10 @@ const sanFranciscoBounds = new L.LatLngBounds(
     zoomControl: false,
     maxZoom: 14,
     minZoom : 14
-  };
+  };  
 
   // Sample locations with proximity values
   function SanFranciscoMap() {
-
-
     return (
       <div className='flex-grow relative'>
           <div className="absolute left-1/2 top-14 transform -translate-x-1/2 z-10 ">
