@@ -6,7 +6,6 @@ import { useRestaurant } from './WifiContext';
 function SearchSection() {
   const { searchResults} = useRestaurant();
   const [showSearchSection,setShowSearchSection] = useState(false);
-
   const toggleSearchSection = () => {
     setShowSearchSection(!showSearchSection);
   };
@@ -20,7 +19,7 @@ function SearchSection() {
         }`}
       >
         <div className=" overflow-y-auto h-[500px]">
-          <div className='flex justify-center items-center' onClick={toggleSearchSection}><svg xmlns="http://www.w3.org/2000/svg" className = {'w-8 h-8'}width="32" height="20" viewBox="0 0 20 20"><path fill="currentColor" fill-rule="evenodd" d="M1 10a1 1 0 0 1 1-1h16a1 1 0 1 1 0 2H2a1 1 0 0 1-1-1Z" clip-rule="evenodd"/></svg></div>
+          <div className='flex justify-center items-center' onClick={toggleSearchSection}><svg xmlns="http://www.w3.org/2000/svg" className = {'w-8 h-8'} width="32" height="20" viewBox="0 0 20 20"><path fill="currentColor" fill-rule="evenodd" d="M1 10a1 1 0 0 1 1-1h16a1 1 0 1 1 0 2H2a1 1 0 0 1-1-1Z" clip-rule="evenodd"/></svg></div>
           <RestaurantList />
         </div>
       </div>
@@ -122,9 +121,8 @@ function CardSection({ restaurant, onClose }) {
     <div className='flex-grow text-center font-bold'>Has Wifi</div>
     </div>
         </div>
-        <a href={restaurant.google} >
+        <a href={restaurant.google} target="_blank" rel="noopener noreferrer" >
       <div className='directions flex items-center justify-center mt-5'>
-
       <div className='bg-gray-600 p-2 flex text-white rounded-lg hover:bg-gray-700 hover:cursor-pointer' >
       <svg xmlns="http://www.w3.org/2000/svg"  className = {"mr-2 "} width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M8 15h2v-3h3.5v2.5L17 11l-3.5-3.5V10H9q-.425 0-.713.288T8 11v4Zm4 7q-.375 0-.738-.15t-.662-.45l-8-8q-.3-.3-.45-.663T2 12q0-.375.15-.738t.45-.662l8-8q.3-.3.663-.45T12 2q.375 0 .738.15t.662.45l8 8q.3.3.45.663T22 12q0 .375-.15.738t-.45.662l-8 8q-.3.3-.663.45T12 22Zm-4-6l4 4l8-8l-8-8l-8 8l4 4Zm4-4Z"/></svg>
         Directions</div>
