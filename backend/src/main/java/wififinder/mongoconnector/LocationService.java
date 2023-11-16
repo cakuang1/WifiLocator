@@ -7,17 +7,15 @@ import org.springframework.stereotype.Service;
 
 
 
-
-
-
 @Service
 public class LocationService {
 
     @Autowired
     private LocationRepository locationRepository;
 
-    public List<Location> findClosestLocations(double longitude, double latitude) {
+    public List<Location> findClosestLocations(double longitude, double latitude,String type) {
         Pageable pageable = PageRequest.of(0, 8); // Limit to the top 8 results
-        return locationRepository.findClosestLocations(longitude, latitude, pageable);
+        return locationRepository.findClosestLocations(longitude, latitude,type, pageable);
     }
+
 }

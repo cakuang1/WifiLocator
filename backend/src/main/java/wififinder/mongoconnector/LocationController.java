@@ -22,16 +22,16 @@ public class LocationController {
     @GetMapping("/closestLocations")
     public ResponseEntity<List<Location>> getClosestLocations(
             @RequestParam("longitude") double longitude,
-            @RequestParam("latitude") double latitude
+            @RequestParam("latitude") double latitude,
+            @RequestParam(name = "type", required = false) String type
     ) {
         // Retrieve closest locations directly from the service
-        List<Location> closestLocations = locationService.findClosestLocations(longitude, latitude);
+        List<Location> closestLocations = locationService.findClosestLocations(longitude, latitude,type);
         // ObjectMapper for JSON parsing
         ObjectMapper objectMapper = new ObjectMapper();
         // Parse the 'hours' string into a list for each location
         for (Location location : closestLocations) {
             try {
-                
                 List<BusinessHours> hoursList = objectMapper.readValue(location.getHours(), new TypeReference<List<BusinessHours>>() {});
                 location.setHoursList(hoursList);
             } catch (IOException e) {
@@ -43,6 +43,9 @@ public class LocationController {
         // Now 'closestLocations' is a List<Location> with 'hoursList' populated
         return ResponseEntity.ok(closestLocations);
     }
+
+
+
 }
 
 

@@ -16,7 +16,7 @@ export function RestaurantProvider({ children }) {
 
 
   return (
-    <RestaurantContext.Provider value={{ selectedArea, setSelectedArea, searchResults, setSearchResults, isSearching, setIsSearching,current,setCurrent}}>
+    <RestaurantContext.Provider value={{ selectedArea, setSelectedArea, searchResults, setSearchResults, isSearching, setIsSearching,current,setCurrent,selectedOption, setSelectedOption}}>
       {children}
     </RestaurantContext.Provider>
   );
