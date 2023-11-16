@@ -122,7 +122,7 @@ function CardSection({ restaurant, onClose }) {
     <div className='flex-grow text-center font-bold'>Has Wifi</div>
     </div>
         </div>
-        <a ref={restaurant.google} >
+        <a href={restaurant.google} >
       <div className='directions flex items-center justify-center mt-5'>
 
       <div className='bg-gray-600 p-2 flex text-white rounded-lg hover:bg-gray-700 hover:cursor-pointer' >
