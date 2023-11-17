@@ -18,19 +18,42 @@ import java.util.List;
 public class LocationController {
     @Autowired
     private LocationService locationService;
+
     @CrossOrigin
-    @GetMapping("/closestLocations")
-    public ResponseEntity<List<Location>> getClosestLocations(
+    @GetMapping("/closestPrivateLocations")
+    public ResponseEntity<List<Location>> getClosestPrivateLocations(
             @RequestParam("longitude") double longitude,
-            @RequestParam("latitude") double latitude,
-            @RequestParam(name = "type", required = false) String type
+            @RequestParam("latitude") double latitude
     ) {
-        // Retrieve closest locations directly from the service
-        List<Location> closestLocations = locationService.findClosestLocations(longitude, latitude,type);
+        List<Location> closestPrivateLocations = locationService.findPrivateLocations(longitude, latitude);
+        return buildResponse(closestPrivateLocations);
+    }
+
+    @CrossOrigin
+    @GetMapping("/closestPublicLocations")
+    public ResponseEntity<List<Location>> getClosestPublicLocations(
+            @RequestParam("longitude") double longitude,
+            @RequestParam("latitude") double latitude
+    ) {
+        List<Location> closestPublicLocations = locationService.findPublicLocations(longitude, latitude);
+        return buildResponse(closestPublicLocations);
+    }
+
+    @CrossOrigin
+    @GetMapping("/closestAllLocations")
+    public ResponseEntity<List<Location>> getClosestAllLocations(
+            @RequestParam("longitude") double longitude,
+            @RequestParam("latitude") double latitude
+    ) {
+        List<Location> closestAllLocations = locationService.findAllLocations(longitude, latitude);
+        return buildResponse(closestAllLocations);
+    }
+
+    private ResponseEntity<List<Location>> buildResponse(List<Location> locations) {
         // ObjectMapper for JSON parsing
         ObjectMapper objectMapper = new ObjectMapper();
         // Parse the 'hours' string into a list for each location
-        for (Location location : closestLocations) {
+        for (Location location : locations) {
             try {
                 List<BusinessHours> hoursList = objectMapper.readValue(location.getHours(), new TypeReference<List<BusinessHours>>() {});
                 location.setHoursList(hoursList);
@@ -40,12 +63,9 @@ public class LocationController {
                 return ResponseEntity.badRequest().build();
             }
         }
-        // Now 'closestLocations' is a List<Location> with 'hoursList' populated
-        return ResponseEntity.ok(closestLocations);
+        // Now 'locations' is a List<Location> with 'hoursList' populated
+        return ResponseEntity.ok(locations);
     }
-
-
-
 }
 
 

@@ -4,7 +4,6 @@ import { useRestaurant } from './WifiContext';
 
 
 function SearchSection() {
-  const { searchResults} = useRestaurant();
   const [showSearchSection,setShowSearchSection] = useState(false);
   const toggleSearchSection = () => {
     setShowSearchSection(!showSearchSection);
@@ -49,7 +48,6 @@ function RestaurantList() {
 <h1 className="font-bold text-center text-xl">Query Results</h1>
 {searchResults.map((restaurant, index) => {
   const isOpen = isStoreOpen(restaurant.hoursList).isOpen;
-
   return (
     <div key={index} onClick={() => openCardSection(restaurant)} className='cursor-pointer relative'>
       <div className='flex p-3 rounded-lg border my-2 h-32 bg-white hover:bg-gray-200'>
@@ -65,8 +63,9 @@ function RestaurantList() {
             <svg xmlns="http://www.w3.org/2000/svg" className='w-6 h-6' width="24" height="24" viewBox="0 0 24 24">
               <path fill="currentColor" d="M4.462 20v-1H6V5.115q0-.666.475-1.14q.474-.475 1.14-.475h8.77q.666 0 1.14.475q.475.474.475 1.14V19h1.538v1H4.462ZM15 19h2V5.115q0-.269-.173-.442t-.442-.173h-3.539v-.485q.927.104 1.54.797q.614.692.614 1.615V19Zm-4-6.23q.31 0 .54-.23q.23-.23.23-.54q0-.31-.23-.54q-.23-.23-.54-.23q-.31 0-.54.23q-.23.23-.23.54q0 .31.23.54q.23.23.54.23Z" />
             </svg>
-            {isOpen ? <div className='text-green-500 font-semibold pl-3'>Open</div> : <div className='text-red-500 font-semibold pl-3'> Closed</div>}
+            {isOpen ? <div className='text-green-500 font-medium text-sm pl-3'>Open</div> : <div className='text-red-500 font-medium text-sm pl-3'> Closed</div>}
           </div>
+          
         </div>
       </div>
       <div className="absolute bottom-0 right-0 mb-2 mr-4">

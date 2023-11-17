@@ -9,23 +9,31 @@ import { useRestaurant } from './WifiContext';
 import ReactDOMServer from 'react-dom/server'; // Import ReactDOMServer
 import { isStoreOpen } from './Search';
 
+
 function LocationMarker() {
   const {selectedArea, setSelectedArea,  setSearchResults,  setIsSearching,selectedOption} = useRestaurant();
   async function fetchClosestLocations(latitude, longitude) {
-    setIsSearching(true)
+    setIsSearching(true);
     try {
-      const response = await fetch(`http://localhost:8080/closestLocations?latitude=${latitude}&longitude=${longitude}&type=${selectedOption}` );
+      let url;
+      if (selectedOption === 'private' || selectedOption === 'public') {
+        url = `http://localhost:8080/closest${capitalizeFirstLetter(selectedOption)}Locations?latitude=${latitude}&longitude=${longitude}`;
+      } else {
+        url = `http://localhost:8080/closestAllLocations?latitude=${latitude}&longitude=${longitude}`;
+      }
+  
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
-      setIsSearching(false)
-      setSearchResults(data)
+      setIsSearching(false);
+      setSearchResults(data);
       return data;
     } catch (error) {
       console.error('Error fetching closest locations:', error.message);
-      setIsSearching(false)
-      setSearchResults([])
+      setIsSearching(false);
+      setSearchResults([]);
       throw error;
     }
   }
@@ -173,10 +181,12 @@ const sanFranciscoBounds = new L.LatLngBounds(
 
   // Sample locations with proximity values
   function SanFranciscoMap() {
+
+
     return (
       <div className='flex-grow relative'>
           <div className="absolute left-1/2 top-14 transform -translate-x-1/2 z-10 ">
-          <SearchStatusComponent/>
+          <SearchStatusComponent />
         </div>
         <MapContainer {...mapOptions}  className = {'h-screen w-full z-0'} maxBounds={sanFranciscoBounds} >
       <TileLayer
@@ -210,3 +220,8 @@ const sanFranciscoBounds = new L.LatLngBounds(
     popupAnchor: [1, -34],
     shadowSize: [41, 41]
   });
+
+
+  function capitalizeFirstLetter(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }

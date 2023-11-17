@@ -8,7 +8,7 @@ export function RestaurantProvider({ children }) {
     const [searchResults, setSearchResults] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
     const [current,setCurrent] = useState(null);
-    const [selectedOption, setSelectedOption] = useState('all');
+    const [selectedOption, setSelectedOption] = useState('');
 
 
 
