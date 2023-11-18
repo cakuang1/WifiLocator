@@ -17,9 +17,9 @@ function LocationMarker() {
     try {
       let url;
       if (selectedOption === 'private' || selectedOption === 'public') {
-        url = `http://localhost:8080/closest${capitalizeFirstLetter(selectedOption)}Locations?latitude=${latitude}&longitude=${longitude}`;
+        url = `https://spring-bq3nilysiq-wl.a.run.app/closest${capitalizeFirstLetter(selectedOption)}Locations?latitude=${latitude}&longitude=${longitude}`;
       } else {
-        url = `http://localhost:8080/closestAllLocations?latitude=${latitude}&longitude=${longitude}`;
+        url = `https://spring-bq3nilysiq-wl.a.run.app/closestAllLocations?latitude=${latitude}&longitude=${longitude}`;
       }
   
       const response = await fetch(url);
