@@ -9,9 +9,8 @@ import { useRestaurant } from './WifiContext';
 import ReactDOMServer from 'react-dom/server'; // Import ReactDOMServer
 import { isStoreOpen } from './Search';
 
-
 function LocationMarker() {
-  const {selectedArea, setSelectedArea,  setSearchResults,  setIsSearching,selectedOption} = useRestaurant();
+  const {selectedArea, setSelectedArea,  setSearchResults,  setIsSearching,selectedOption,setSelectedOption} = useRestaurant();
   async function fetchClosestLocations(latitude, longitude) {
     setIsSearching(true);
     try {
@@ -28,6 +27,7 @@ function LocationMarker() {
       }
       const data = await response.json();
       setIsSearching(false);
+      setSelectedOption(null);
       setSearchResults(data);
       return data;
     } catch (error) {
@@ -37,6 +37,10 @@ function LocationMarker() {
       throw error;
     }
   }
+
+
+
+
   const MIN_LATITUDE = 37.663132;
   const MAX_LATITUDE = 37.845245;
   const MIN_LONGITUDE = -122.558459;
@@ -117,6 +121,8 @@ function LocationMarker() {
     </>
   );
 }
+
+
 
 const ClosestMarkers = () => {
   const {searchResults} = useRestaurant()
@@ -202,10 +208,6 @@ const sanFranciscoBounds = new L.LatLngBounds(
   
   export default SanFranciscoMap;
   
-
-
-
-
 
 
   // helper section 
